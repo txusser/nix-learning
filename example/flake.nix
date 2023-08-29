@@ -1,19 +1,23 @@
 {
   description = "Example C package";
 
+  inputs = {
+    nixpkgs = {
+      url = github:nixos/nixpkgs?ref=23.05;
+    };
+  };
+    
   outputs = { 
     self, 
-    nixpkgs 
-  }: {
-
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-
-    packages.x86_64-linux = {
-      default = self.packages.x86_64-linux.hello;
-      thing1 = {
-        thing2 = nixpkgs.legacyPackages.x86_64-linux.btop;W
-      };
+    nixpkgs, 
+  }: let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs {inherit system;};
+  in {
+    packages.${system} = {
+      default = pkgs.btop;
+      myfox = pkgs.librewolf;
 
     };
-  }
-} 
+  };
+}
